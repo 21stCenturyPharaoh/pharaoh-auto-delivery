@@ -1,4 +1,13 @@
-echo 'name = "pharaoh-auto-delivery"
+name = "pharaoh-auto-delivery"
 main = "index.js"
-compatibility_date = "2024-01-01"
-compatibility_flags = ["nodejs_compat"]' > wrangler.toml
+compatibility_date = "2026-08-01"
+
+[vars]
+ENV = "production"
+
+[[kv_namespaces]]
+binding = "AFFILIATE_KV"
+id = "YOUR_KV_ID_HERE" # we’ll add this after
+
+[site]
+bucket = "./public"
