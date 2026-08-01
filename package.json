@@ -1,0 +1,9 @@
+{
+  "name": "pharaoh-auto-delivery",
+  "version": "1.0.0",
+  "type": "module",
+  "devDependencies": {
+    "@cloudflare/workers-types": "*"
+  },
+  "scripts": {}
+}
