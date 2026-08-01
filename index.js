@@ -1,30 +1,39 @@
 export default {
-  async fetch(request, env) {
-    const corsHeaders = {"Access-Control-Allow-Origin":"*","Access-Control-Allow-Methods":"GET, POST, OPTIONS","Access-Control-Allow-Headers":"Content-Type, Authorization"};
-    if (request.method === "OPTIONS") return new Response(null, {status: 204, headers: corsHeaders});
-    if (new URL(request.url).pathname === "/") return new Response("👑 Pharaoh Auto-Delivery Worker v1.2 ONLINE", {headers: {"Content-Type":"text/plain",...corsHeaders}});
-    
-    if (request.method === "POST" && new URL(request.url).pathname === "/checkout") {
+  async fetch(request, env, ctx) {
+    const url = new URL(request.url);
+    const { pathname } = url;
+
+    // CORS headers for frontend
+    const corsHeaders = {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    };
+
+    if (request.method === 'OPTIONS') {
+      return new Response(null, { headers: corsHeaders });
+    }
+
+    // 1. HEALTH CHECK
+    if (pathname === '/health') {
+      return new Response(JSON.stringify({
+        status: "ONLINE",
+        worker: "Pharaoh Auto-Delivery v1.3",
+        time: new Date().toISOString(),
+        kv: env.AFFILIATE_KV ? "BOUND" : "NOT_BOUND"
+      }), {
+        headers: { 'Content-Type': 'application/json', ...corsHeaders }
+      });
+    }
+
+    // 2. REGISTER AFFILIATE - FOR STRATEGY #2
+    if (pathname === '/register-affiliate' && request.method === 'POST') {
       try {
-        const {email, productId} = await request.json();
-        if (!email) return new Response(JSON.stringify({success:false,message:"Missing email"}), {status:400, headers: {"Content-Type":"application/json",...corsHeaders}});
+        const data = await request.json();
         
-        await fetch("https://api.resend.com/emails", {
-          method: "POST",
-          headers: {"Authorization": `Bearer ${env.RESEND_API_KEY}`, "Content-Type": "application/json"},
-          body: JSON.stringify({
-            from: "Pharaoh Angels <onboarding@resend.dev>",
-            to: [email],
-            subject: "Hello World - Your Download",
-            html: "<p>Congrats on sending your <strong>first email</strong>!</p>"
-          })
-        });
+        // Generate ref code: CAPTAIN01_LANE_COUNTRY
+        const count = Math.floor(Math.random() * 1000) + 1;
+        const refCode = `CAPTAIN${String(count).padStart(3, '0')}_${data.lane}_${data.country}`;
         
-        return new Response(JSON.stringify({success:true,message:`Email sent to ${email}`}), {headers: {"Content-Type":"application/json",...corsHeaders}});
-      } catch(e) { 
-        return new Response(JSON.stringify({success:false,message:e.message}), {status:500, headers: {"Content-Type":"application/json",...corsHeaders}}); 
-      } 
-    } 
-    return new Response("Not Found", {status: 404}); 
-  }
-}
+        // Save to KV
+        await env.AFFILIATE_KV.put(refCode
