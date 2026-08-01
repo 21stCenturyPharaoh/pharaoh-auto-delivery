@@ -3,11 +3,3 @@ main = "index.js"
 compatibility_date = "2026-08-01"
 
 [vars]
-ENV = "production"
-
-[[kv_namespaces]]
-binding = "AFFILIATE_KV"
-id = "YOUR_KV_ID_HERE" # we’ll add this after
-
-[site]
-bucket = "./public"
