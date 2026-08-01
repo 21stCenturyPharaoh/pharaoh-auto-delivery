@@ -36,4 +36,41 @@ export default {
         const refCode = `CAPTAIN${String(count).padStart(3, '0')}_${data.lane}_${data.country}`;
         
         // Save to KV
-        await env.AFFILIATE_KV.put(refCode
+        await env.AFFILIATE_KV.put(refCode, JSON.stringify({
+          ...data,
+          refCode,
+          registeredAt: new Date().toISOString(),
+          sales: 0,
+          commissionOwed: 0
+        }));
+
+        return new Response(JSON.stringify({
+          success: true,
+          message: `Welcome Captain! Your ref code: ${refCode}`,
+          refCode,
+          dashboardUrl: `https://har-the-registry.pages.dev/dashboard?ref=${refCode}`
+        }), { headers: { 'Content-Type': 'application/json', ...corsHeaders } });
+
+      } catch (e) {
+        return new Response(JSON.stringify({ success: false, error: e.message }), { 
+          status: 400, 
+          headers: { 'Content-Type': 'application/json', ...corsHeaders } 
+        });
+      }
+    }
+
+    // 3. CHECKOUT WITH REF TRACKING - v1.2 feature
+    if (pathname === '/checkout' && request.method === 'POST') {
+      const data = await request.json();
+      // TODO: Add Stripe + Resend email here
+      return new Response(JSON.stringify({ success: true, ref: data.ref }), {
+        headers: { 'Content-Type': 'application/json', ...corsHeaders }
+      });
+    }
+
+    // 4. DEFAULT
+    return new Response('Pharaoh Auto-Delivery Worker v1.3 ONLINE. Use /health or /register-affiliate', {
+      headers: corsHeaders
+    });
+  }
+};
