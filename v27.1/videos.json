@@ -1,0 +1,11 @@
+{
+  "version": "27.1.1",
+  "node": "auto-delivery",
+  "role": "delivery-transaction-automation",
+  "videos": [
+    {"id": "yKufPwpT4E4", "order": 1},
+    {"id": "dhLboOnPljo", "order": 2},
+    {"id": "mHBJN0QA8Fo", "order": 3},
+    {"id": "SGPJWd2q2RM", "order": 4}
+  ]
+}

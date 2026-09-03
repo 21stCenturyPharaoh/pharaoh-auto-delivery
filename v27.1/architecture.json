@@ -1,0 +1,10 @@
+{
+  "hermes_toth": "master-command",
+  "hallel": "game-layer",
+  "pharaoh_auto_delivery": {
+    "type": "delivery-node",
+    "routes_preserved": ["/register-affiliate","/register-business","/track-click","/affiliates","/health"],
+    "v27_layer": "/v27.1/",
+    "bridge": "transaction-to-mission"
+  }
+}
