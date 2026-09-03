@@ -3,3 +3,24 @@ main = "index.js"
 compatibility_date = "2026-08-01"
 
 [vars]
+NODE_ENV = "production"
+
+[[kv_namespaces]]
+binding = "AFFILIATES"
+id = "e50f881aba5e49caac832b168848aa13"
+
+[[kv_namespaces]]
+binding = "ASSETS"
+id = "11dc0e0abfd74498bd1f66eaa38be5c8"
+
+[[kv_namespaces]]
+binding = "BUSINESSES"
+id = "133ffb75b5fb4a6690b7f9f15bf692c0"
+
+[[kv_namespaces]]
+binding = "CLICKS"
+id = "208532c235824dafa76cdca698ce4ba4"
+
+[[kv_namespaces]]
+binding = "HERMES_MEMORY"
+id = "23e29bf2b1a34d178fd00eb1655ba64a"
